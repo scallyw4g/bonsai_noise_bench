@@ -7,3 +7,6 @@
 [submodule "scripts"]
 	path = scripts
 	url = ../bonsai_build_scripts.git
+[submodule "external/FastNoise2"]
+	path = external/FastNoise2
+	url = https://github.com/Auburn/FastNoise2

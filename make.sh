@@ -43,13 +43,9 @@ BIN_GAME_LIBS="$BIN/game_libs"
 BONSAI_INTERNAL='-D BONSAI_INTERNAL=1'
 
 EXECUTABLES_TO_BUILD="
-  $SRC/game_loader.cpp
-  $SRC/font/ttf.cpp
+  $SRC/bonsai_main.cpp
 "
-  # $SRC/tools/asset_packer.cpp
-  # $SRC/net/server.cpp
 
-# COMPILER="clang++-19"
 COMPILER="clang++"
 
 function BuildExecutables
@@ -59,7 +55,7 @@ function BuildExecutables
   for executable in $EXECUTABLES_TO_BUILD; do
     SetOutputBinaryPathBasename "$executable" "$BIN"
     echo -e "$Building $executable"
-    $COMPILER                                       \
+    $COMPILER                                        \
       $SANITIZER                                     \
       $OPTIMIZATION_LEVEL                            \
       $CXX_OPTIONS                                   \
@@ -91,26 +87,12 @@ function RunEntireBuild {
     [ $? -ne 0 ] && exit 1
   fi
 
-  BuildWithClang
-  [ $? -ne 0 ] && exit 1
+  BuildExecutables
 
 }
 
 
 function RunPoofHelper {
-
-   # -D _M_CEE_PURE \
-
-   # -I "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.28.29333/include"        \
-   # -I "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.28.29333/atlmfc/include" \
-
-   # -I "C:/Program Files/LLVM/lib/clang/11.0.0/include"                                                         \
-   # -I "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.28.29333/include"        \
-   # -I "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.28.29333/atlmfc/include" \
-   # -I "C:/Program Files (x86)/Windows Kits/10/Include/10.0.18362.0/ucrt"                                       \
-   # -I "C:/Program Files (x86)/Windows Kits/10/include/10.0.18362.0/shared"                                     \
-   # -I "C:/Program Files (x86)/Windows Kits/10/include/10.0.18362.0/um"                                         \
-   # -I "C:/Program Files (x86)/Windows Kits/10/include/10.0.18362.0/winrt"                                      \
 
    which poof > /dev/null 2>&1
    if [ $? -eq 0 ]; then
@@ -127,6 +109,34 @@ function RunPoofHelper {
 
 }
 
+function BuildFastNoise2 {
+  cd external/FastNoise2
+
+  # rm -Rf build
+
+  if [ ! -d "build" ]; then
+    mkdir build
+    cmake -S . -B build
+    [ $? -ne 0 ] && echo "FastNoise2 failed to configure." && exit 1
+  fi
+
+  cmake --build build --config Release
+
+  cd -
+
+  clang++                            \
+    -D_MT -D_DLL \
+    -O2 \
+    -I ./external/FastNoise2/Include/ \
+    -L./external/FastNoise2/build/Release/lib \
+    -nostdlib \
+    -lFastNoise \
+    -o bin/fastnoise_main.cpp \
+    src/fastnoise_main.cpp
+
+
+}
+
 function RunPoof
 {
   echo -e ""
@@ -138,26 +148,8 @@ function RunPoof
   # [ -d src/generated ] && rm -Rf src/generated
   # [ -d generated ] && rm -Rf generated
 
-  # RunPoofHelper examples/ui_test/game.cpp && echo -e "$Success poofed examples/ui_test/game.cpp" &
-  # TrackPid "" $!
-
-  # RunPoofHelper src/game_loader.cpp && echo -e "$Success poofed src/game_loader.cpp" &
-  # TrackPid "" $!
-
-  # RunPoofHelper examples/turn_based/game.cpp && echo -e "$Success poofed examples/turn_based/game.cpp" &
-  # TrackPid "" $!
-
-  RunPoofHelper examples/terrain_gen/game.cpp && echo -e "$Success poofed examples/terrain_gen/game.cpp" &
+  RunPoofHelper src/bonsai_main.cpp && echo -e "$Success poofed src/bonsai_main.cpp" &
   TrackPid "" $!
-
-  # RunPoofHelper examples/the_wanderer/game.cpp && echo -e "$Success poofed examples/the_wanderer/game.cpp" &
-  # TrackPid "" $!
-
-  # RunPoofHelper examples/tools/voxel_synthesis_rule_baker/game.cpp && echo -e "$Success poofed examples/tools/voxel_synthesis_rule_baker/game.cpp" &
-  # TrackPid "" $!
-
-  # RunPoofHelper src/tools/asset_packer.cpp && echo -e "$Success poofed src/tools/asset_packer.cpp" &
-  # TrackPid "" $!
 
   WaitForTrackedPids
   sync
@@ -192,52 +184,16 @@ while (( "$#" )); do
       BuildAll
     ;;
 
+    "BuildFastNoise2")
+      BuildFastNoise2
+    ;;
+
     "BuildExecutables")
       BuildExecutables=1
     ;;
 
-    "BuildDebugSystem")
-      echo "BuildDebugSystem has been deprecated and will be removed in a future version."
-    ;;
-
-    "BuildBundledExamples")
-      BuildExamples=1
-      for ex in $BUNDLED_EXAMPLES; do
-        EXAMPLES_TO_BUILD="$EXAMPLES_TO_BUILD $ex"
-      done
-    ;;
-
-    "BuildTests")
-      BuildTests=1
-    ;;
-
-    "BuildDebugOnlyTests")
-      BuildDebugOnlyTests=1
-    ;;
-
-    "RunTests")
-      RunTests=1
-    ;;
-
     "RunPoof")
       RunPoof=1
-    ;;
-
-    "BuildWithEMCC")
-      BuildWithEMCC=1
-    ;;
-
-    "BuildSingleExample")
-      BuildExamples=1
-      EXAMPLES_TO_BUILD="$EXAMPLES_TO_BUILD $2"
-      shift
-    ;;
-
-    "BundleRelease")
-      BundleRelease=1
-      OPTIMIZATION_LEVEL="-O2"
-      BONSAI_INTERNAL="-D BONSAI_INTERNAL=0"
-      # BuildAll
     ;;
 
     "-Od")
