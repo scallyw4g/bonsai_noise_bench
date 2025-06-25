@@ -87,8 +87,14 @@ function RunEntireBuild {
     [ $? -ne 0 ] && exit 1
   fi
 
-  BuildExecutables
+  if [ $BuildExecutables == 1 ]; then
+    BuildExecutables
+  fi
 
+
+  if [ $BuildFastNoise2 == 1 ]; then
+    BuildFastNoise2
+  fi
 }
 
 
@@ -158,20 +164,31 @@ function RunPoof
 }
 
 BuildAll() {
+  echo "BuildAll"
 
   BuildExamples=1
   BuildExecutables=1
   BuildTests=1
+  BuildFastNoise2=1
 
   for ex in $BUNDLED_EXAMPLES; do
     EXAMPLES_TO_BUILD="$EXAMPLES_TO_BUILD $ex"
   done
 }
 
+Clean() {
+  rm -Rf bin
+  mkdir bin
+
+  rm -Rf external/FastNoise2/build
+}
+
+
 if [ $# -eq 0 ]; then
   OPTIMIZATION_LEVEL="-O2"
   BuildAll
 fi
+
 
 BundleRelease=0
 while (( "$#" )); do
@@ -180,12 +197,16 @@ while (( "$#" )); do
 
   case $CliArg in
 
+    "Clean")
+      Clean
+    ;;
+
     "BuildAll")
       BuildAll
     ;;
 
     "BuildFastNoise2")
-      BuildFastNoise2
+      BuildFastNoise2=1
     ;;
 
     "BuildExecutables")
