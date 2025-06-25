@@ -5,7 +5,7 @@
 
 int main()
 {
-  auto fnSimplex = FastNoise::New<FastNoise::Simplex>();
+  auto Noise = FastNoise::New<FastNoise::Perlin>();
 
 
   auto OutputDim = 128;
@@ -19,7 +19,7 @@ int main()
   for (int i = 0; i < IterCount; ++i)
   {
     auto Start = __rdtsc();
-    fnSimplex->GenUniformGrid3D(noiseOutput.data(), 0, 0, 0, OutputDim, OutputDim, OutputDim, 0.2f, 1337);
+    Noise->GenUniformGrid3D(noiseOutput.data(), 0, 0, 0, OutputDim, OutputDim, OutputDim, 0.2f, 1337);
     auto End = __rdtsc();
 
 
