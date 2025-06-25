@@ -93,15 +93,15 @@ function RunEntireBuild {
     [ $? -ne 0 ] && exit 1
   fi
 
+  if [ $BuildFastNoise == 1 ]; then
+    BuildFastNoise
+  fi
+
   if [ $BuildExecutables == 1 ]; then
     echo "exe"
     BuildExecutables
   fi
 
-
-  if [ $BuildFastNoise == 1 ]; then
-    BuildFastNoise
-  fi
 
 }
 
