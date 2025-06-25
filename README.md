@@ -21,12 +21,8 @@ On my laptop :
 ```
 $ bin/bonsai_main.exe
    Info    - Initializing Bonsai
-AvgCycles/Cell(4.358449) MinCycles/Cell(4.064439)
-```
-
-```
-$ bin/fastnoise_main.cpp
-AvgCycles/Cell(10.452278) MinCycles/Cell(9.677464)
+Bonsai    Cycles/Cell Avg(4.61)  Best(4.18)  Worst(7.71)
+FastNoise Cycles/Cell Avg(11.33) Best(10.09) Worst(16.87)
 ```
 
 # TODO

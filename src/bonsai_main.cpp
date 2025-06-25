@@ -39,7 +39,7 @@ DoBonsaiBenchmark(memory_arena *Memory)
   auto BestCyclesPerCell = float(Best)/float(OutputVol);
   auto WorstCyclesPerCell = float(Worst)/float(OutputVol);
 
-  printf("Cycles/Cell Avg(%f) Best(%f) Worst(%f)\n",
+  printf("Bonsai    Cycles/Cell Avg(%.2f) Best(%.2f) Worst(%f.2)\n",
       r64(AvgCyclesPerCell),
       r64(BestCyclesPerCell),
       r64(WorstCyclesPerCell));
@@ -73,7 +73,7 @@ DoFastNoiseBenchmark()
   auto BestCyclesPerCell = float(Best)/float(OutputVol);
   auto WorstCyclesPerCell = float(Worst)/float(OutputVol);
 
-  printf("Cycles/Cell Avg(%f) Best(%f) Worst(%f)\n",
+  printf("FastNoise Cycles/Cell Avg(%.2f) Best(%.2f) Worst(%.2f)\n",
       r64(AvgCyclesPerCell),
       r64(BestCyclesPerCell),
       r64(WorstCyclesPerCell));
@@ -88,10 +88,9 @@ int main()
 
   InitializeBonsaiStdlib(BonsaiInit_InitDebugSystem, 0, &Stdlib, &Memory, 0);
 
-  /* DoBonsaiBenchmark(&Memory); */
-
+  DoBonsaiBenchmark(&Memory);
   auto Noise = FastNoise::New<FastNoise::Perlin>();
-  /* DoFastNoiseBenchmark(); */
+  DoFastNoiseBenchmark();
 
   OpenAndInitializeWindow();
   PlatformMakeRenderContextCurrent(Os);
