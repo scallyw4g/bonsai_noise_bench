@@ -64,13 +64,18 @@ function BuildExecutables
       $PLATFORM_LINKER_OPTIONS                       \
       $PLATFORM_DEFINES                              \
       $PLATFORM_INCLUDE_DIRS                         \
+      -I "external/FastNoise2/include" \
       -I "$ROOT"                                     \
       -I "$SRC"                                      \
       -I "$INCLUDE"                                  \
       -o "$output_basename""$PLATFORM_EXE_EXTENSION" \
-      $executable &
+      -L./external/FastNoise2/build/Release/lib \
+      -lFastNoise \
+      -nostdlib   \
+      -D_MT -D_DLL \
+      $executable
 
-    TrackPid "$executable" $!
+    # TrackPid "$executable" $!
 
   done
 }
@@ -83,18 +88,22 @@ fi
 function RunEntireBuild {
 
   if [ $RunPoof == 1 ]; then
+    echo "poof"
     RunPoof
     [ $? -ne 0 ] && exit 1
   fi
 
   if [ $BuildExecutables == 1 ]; then
+    echo "exe"
     BuildExecutables
   fi
 
 
-  if [ $BuildFastNoise2 == 1 ]; then
-    BuildFastNoise2
-  fi
+  # if [ $BuildFastNoise == 1 ]; then
+  #   echo "fn2"
+  #   BuildFastNoise
+  # fi
+
 }
 
 
@@ -115,7 +124,7 @@ function RunPoofHelper {
 
 }
 
-function BuildFastNoise2 {
+function BuildFastNoise {
   cd external/FastNoise2
 
   # rm -Rf build
@@ -169,7 +178,7 @@ BuildAll() {
   BuildExamples=1
   BuildExecutables=1
   BuildTests=1
-  BuildFastNoise2=1
+  BuildFastNoise=1
 
   for ex in $BUNDLED_EXAMPLES; do
     EXAMPLES_TO_BUILD="$EXAMPLES_TO_BUILD $ex"
@@ -205,8 +214,8 @@ while (( "$#" )); do
       BuildAll
     ;;
 
-    "BuildFastNoise2")
-      BuildFastNoise2=1
+    "BuildFastNoise")
+      BuildFastNoise=1
     ;;
 
     "BuildExecutables")
