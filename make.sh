@@ -94,6 +94,7 @@ function RunEntireBuild {
   fi
 
   if [ $BuildFastNoise == 1 ]; then
+    echo "fn2"
     BuildFastNoise
   fi
 
@@ -126,29 +127,19 @@ function RunPoofHelper {
 function BuildFastNoise {
   cd external/FastNoise2
 
-  # rm -Rf build
+  rm -Rf build
 
   if [ ! -d "build" ]; then
     mkdir build
-    cmake -S . -B build
+    echo "$CC $CXX" 
+    cmake -G "Visual Studio 17 2022" -A x64 -S . -B build
+    # cmake -S . -B build
     [ $? -ne 0 ] && echo "FastNoise2 failed to configure." && exit 1
   fi
 
   cmake --build build --config Release
 
   cd -
-
-  clang++                            \
-    -D_MT -D_DLL \
-    -O2 \
-    -I ./external/FastNoise2/Include/ \
-    -L./external/FastNoise2/build/Release/lib \
-    -nostdlib \
-    -lFastNoise \
-    -o bin/fastnoise_main.cpp \
-    src/fastnoise_main.cpp
-
-
 }
 
 function RunPoof
