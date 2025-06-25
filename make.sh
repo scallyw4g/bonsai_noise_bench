@@ -99,10 +99,9 @@ function RunEntireBuild {
   fi
 
 
-  # if [ $BuildFastNoise == 1 ]; then
-  #   echo "fn2"
-  #   BuildFastNoise
-  # fi
+  if [ $BuildFastNoise == 1 ]; then
+    BuildFastNoise
+  fi
 
 }
 
