@@ -127,7 +127,7 @@ function RunPoofHelper {
 function BuildFastNoise {
   cd external/FastNoise2
 
-  rm -Rf build
+  # rm -Rf build
 
   if [ ! -d "build" ]; then
     mkdir build
