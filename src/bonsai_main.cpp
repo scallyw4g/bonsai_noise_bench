@@ -9,7 +9,7 @@
 global_variable const u32 xyOutputDim = 512;
 global_variable const u32  zOutputDim = 16;
 global_variable u32 OutputVol = Square(xyOutputDim)*zOutputDim;
-global_variable u32 IterCount = 32ull;
+global_variable const u32 IterCount = 32ull;
 /* global_variable u32 IterCount = 1ull; */
 
 
@@ -23,10 +23,11 @@ DoBonsaiBenchmark(memory_arena *Memory)
   auto Best  = 0xFFFFFFFFFFFFFFFF;
   auto Worst = 0ull;
   auto Elapsed = 0llu;
-  for (u32 i = 0; i < IterCount; ++i)
+  for (s32 i = 0; i < IterCount; ++i)
   {
+    v3i Offset = V3i(i*xyOutputDim, i*xyOutputDim, i*zOutputDim);
     auto Start = __rdtsc();
-    PerlinNoise( NoiseOutput, V3(20.f), 1.0f, ODim, V3i(0), 1, &Params);
+    PerlinNoise( NoiseOutput, V3(20.f), 1.0f, ODim, Offset, 1, &Params);
     auto End = __rdtsc();
 
 
@@ -35,9 +36,9 @@ DoBonsaiBenchmark(memory_arena *Memory)
     Worst = Max(Worst, This);
 
     Elapsed += This;
-    /* MAIN_THREAD_ADVANCE_DEBUG_SYSTEM(Plat->dt); */
     PushHistogramDataPoint(This);
   }
+
 
   auto AvgCyclesPerCell = float(Elapsed)/float(OutputVol*IterCount);
   auto BestCyclesPerCell = float(Best)/float(OutputVol);
@@ -49,7 +50,14 @@ DoBonsaiBenchmark(memory_arena *Memory)
       r64(WorstCyclesPerCell));
 
 
+#if 1
+  f32 *Result = AllocateAligned(f32, Memory, OutputVol, 32);
+  auto Params2 = AllocatePerlinParams(ODim, Memory);
+  PerlinNoise( Result, V3(20.f), 1.0f, ODim, V3i(0), 1, &Params2);
+  return Result;
+#else
   return NoiseOutput;
+#endif
 }
 
 link_internal std::vector<float>
@@ -120,7 +128,6 @@ int main()
 
   renderer_2d Ui = {};
   InitRenderer2D(&Ui, Plat, &Memory);
-  Init_Global_QuadVertexBuffer();
 
   f32 ClearC =  0.4f;
   GetGL()->ClearColor(ClearC, ClearC, ClearC, 1.f);
