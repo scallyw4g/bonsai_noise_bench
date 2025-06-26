@@ -14,6 +14,7 @@ RunPoof=0
 
 BuildExecutables=0
 BuildExamples=0
+BuildFastNoise=0
 
 BuildTests=0
 BuildDebugOnlyTests=0
@@ -80,31 +81,28 @@ function BuildExecutables
   done
 }
 
+function BuildFastNoise {
+  cd external/FastNoise2
+
+  # rm -Rf build
+
+  if [ ! -d "build" ]; then
+    mkdir build
+    echo "$CC $CXX" 
+    cmake -G "Visual Studio 17 2022" -A x64 -S . -B build
+    # cmake -S . -B build
+    [ $? -ne 0 ] && echo "FastNoise2 failed to configure." && exit 1
+  fi
+
+  cmake --build build --config Release
+
+  cd -
+}
+
 
 if [ ! -d "$BIN" ]; then
   mkdir "$BIN"
 fi
-
-function RunEntireBuild {
-
-  if [ $RunPoof == 1 ]; then
-    echo "poof"
-    RunPoof
-    [ $? -ne 0 ] && exit 1
-  fi
-
-  if [ $BuildFastNoise == 1 ]; then
-    echo "fn2"
-    BuildFastNoise
-  fi
-
-  if [ $BuildExecutables == 1 ]; then
-    echo "exe"
-    BuildExecutables
-  fi
-
-
-}
 
 
 function RunPoofHelper {
@@ -122,24 +120,6 @@ function RunPoofHelper {
    fi
 
 
-}
-
-function BuildFastNoise {
-  cd external/FastNoise2
-
-  # rm -Rf build
-
-  if [ ! -d "build" ]; then
-    mkdir build
-    echo "$CC $CXX" 
-    cmake -G "Visual Studio 17 2022" -A x64 -S . -B build
-    # cmake -S . -B build
-    [ $? -ne 0 ] && echo "FastNoise2 failed to configure." && exit 1
-  fi
-
-  cmake --build build --config Release
-
-  cd -
 }
 
 function RunPoof
@@ -178,7 +158,6 @@ BuildAll() {
 Clean() {
   rm -Rf bin
   mkdir bin
-
   rm -Rf external/FastNoise2/build
 }
 
@@ -244,5 +223,24 @@ while (( "$#" )); do
 
   shift
 done
+
+
+function RunEntireBuild {
+
+  if [ $RunPoof == 1 ]; then
+    RunPoof
+    [ $? -ne 0 ] && exit 1
+  fi
+
+  if [ $BuildFastNoise == 1 ]; then
+    BuildFastNoise
+  fi
+
+  if [ $BuildExecutables == 1 ]; then
+    BuildExecutables
+  fi
+
+
+}
 
 time RunEntireBuild

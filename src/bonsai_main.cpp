@@ -6,16 +6,17 @@
 #include "external/bonsai_stdlib/bonsai_stdlib.h"
 #include "external/bonsai_stdlib/bonsai_stdlib.cpp"
 
-global_variable u32 OutputDim = 128;
-global_variable u32 OutputVol = OutputDim*OutputDim*OutputDim;
-global_variable u32 IterCount = 100ull;
+global_variable const u32 xyOutputDim = 512;
+global_variable const u32  zOutputDim = 16;
+global_variable u32 OutputVol = Square(xyOutputDim)*zOutputDim;
+global_variable u32 IterCount = 32ull;
 
 
-link_internal void
+link_internal f32 *
 DoBonsaiBenchmark(memory_arena *Memory)
 {
-  v3i ODim = V3i(s32(OutputDim));
-  f32 *noiseOutput = Allocate(f32, Memory, OutputVol);
+  v3i ODim = V3i(s32(xyOutputDim), s32(xyOutputDim), s32(zOutputDim));
+  f32 *NoiseOutput = AllocateAligned(f32, Memory, OutputVol, 32);
   auto Params = AllocatePerlinParams(ODim, Memory);
 
   auto Best  = 0xFFFFFFFFFFFFFFFF;
@@ -24,7 +25,7 @@ DoBonsaiBenchmark(memory_arena *Memory)
   for (u32 i = 0; i < IterCount; ++i)
   {
     auto Start = __rdtsc();
-    PerlinNoise( noiseOutput, V3(1.f), ODim, V3i(0), 1, &Params);
+    PerlinNoise( NoiseOutput, V3(20.f), 1.0f, ODim, V3i(0), 1, &Params);
     auto End = __rdtsc();
 
 
@@ -33,24 +34,28 @@ DoBonsaiBenchmark(memory_arena *Memory)
     Worst = Max(Worst, This);
 
     Elapsed += This;
+    /* MAIN_THREAD_ADVANCE_DEBUG_SYSTEM(Plat->dt); */
+    PushHistogramDataPoint(This);
   }
 
   auto AvgCyclesPerCell = float(Elapsed)/float(OutputVol*IterCount);
   auto BestCyclesPerCell = float(Best)/float(OutputVol);
   auto WorstCyclesPerCell = float(Worst)/float(OutputVol);
 
-  printf("Bonsai    Cycles/Cell Avg(%.2f) Best(%.2f) Worst(%f.2)\n",
+  printf("Bonsai    Cycles/Cell Avg(%.2f) Best(%.2f) Worst(%.2f)\n",
       r64(AvgCyclesPerCell),
       r64(BestCyclesPerCell),
       r64(WorstCyclesPerCell));
 
+
+  return NoiseOutput;
 }
 
-link_internal void
+link_internal std::vector<float>
 DoFastNoiseBenchmark()
 {
   auto Noise = FastNoise::New<FastNoise::Perlin>();
-  std::vector<float> noiseOutput(OutputVol);
+  std::vector<float> NoiseOutput(OutputVol);
 
   auto Best = 0xFFFFFFFFFFFFFFFF;
   auto Worst = 0ull;
@@ -58,7 +63,7 @@ DoFastNoiseBenchmark()
   for (auto i = 0ull; i < IterCount; ++i)
   {
     auto Start = __rdtsc();
-    Noise->GenUniformGrid3D(noiseOutput.data(), 0, 0, 0, s32(OutputDim), s32(OutputDim), s32(OutputDim), 0.2f, 1337);
+    Noise->GenUniformGrid3D(NoiseOutput.data(), 0, 0, 0, s32(xyOutputDim), s32(xyOutputDim), s32(zOutputDim), 0.04f, 1337);
     auto End = __rdtsc();
 
 
@@ -67,6 +72,8 @@ DoFastNoiseBenchmark()
     Worst = Max(Worst, This);
 
     Elapsed += This;
+    /* MAIN_THREAD_ADVANCE_DEBUG_SYSTEM(Plat->dt); */
+    PushHistogramDataPoint(This);
   }
 
   auto AvgCyclesPerCell = float(Elapsed)/float(OutputVol*IterCount);
@@ -78,6 +85,7 @@ DoFastNoiseBenchmark()
       r64(BestCyclesPerCell),
       r64(WorstCyclesPerCell));
 
+  return NoiseOutput;
 }
 
 int main()
@@ -88,23 +96,37 @@ int main()
 
   InitializeBonsaiStdlib(BonsaiInit_InitDebugSystem, 0, &Stdlib, &Memory, 0);
 
-  DoBonsaiBenchmark(&Memory);
-  auto Noise = FastNoise::New<FastNoise::Perlin>();
-  DoFastNoiseBenchmark();
+  auto BonsaiData = DoBonsaiBenchmark(&Memory);
+  auto FNData     = DoFastNoiseBenchmark();
 
   OpenAndInitializeWindow();
   PlatformMakeRenderContextCurrent(Os);
   Ensure( InitializeOpenglFunctions() );
 
+  texture BonsaiTextures[zOutputDim];
+  RangeIterator(z, zOutputDim)
+  {
+    auto Data = BonsaiData+(xyOutputDim*xyOutputDim*z);
+    BonsaiTextures[z] = MakeTexture_SingleChannel( V2i(s32(xyOutputDim)), Data, CSz(""), False );
+  }
+
+  texture FNTextures[zOutputDim];
+  RangeIterator(z, zOutputDim)
+  {
+    FNTextures[z] = MakeTexture_SingleChannel( V2i(s32(xyOutputDim)), FNData.data()+(xyOutputDim*xyOutputDim*z), CSz(""), False );
+  }
+
+
   renderer_2d Ui = {};
   InitRenderer2D(&Ui, Plat, &Memory);
-
   Init_Global_QuadVertexBuffer();
 
   f32 ClearC =  0.4f;
   GetGL()->ClearColor(ClearC, ClearC, ClearC, 1.f);
 
-  while (1)
+  window_layout BonsaiWindow = WindowLayout("Bonsai");
+  window_layout FNWindow = WindowLayout("FastNoise");
+  while (Os->ContinueRunning)
   {
     BonsaiFrameBegin(&Stdlib, &Ui);
 
@@ -113,8 +135,43 @@ int main()
       Info("dt(%.2f) (%d)", r64(Plat->dt), Plat->Input.LMB.Pressed); //Plat->Input.F1.Clicked, Plat->Input.F2.Clicked);
     }
 
+    PushWindowStart(&Ui, &BonsaiWindow);
+    RangeIterator(i, zOutputDim)
+    {
+      u32 Start = StartColumn(&Ui);
+        PushTexturedQuad(&Ui, &BonsaiTextures[i], V2(s32(xyOutputDim)), zDepth_Text);
+      EndColumn(&Ui, Start);
+      if ( ((i+1) % 4) == 0)
+      {
+        PushNewRow(&Ui);
+      }
+    }
+
+    PushNewRow(&Ui);
+    PushNewRow(&Ui);
+    PushNewRow(&Ui);
+    PushNewRow(&Ui);
+    PushNewRow(&Ui);
+    PushNewRow(&Ui);
+
+#if 1
+    /* PushWindowStart(&Ui, &FNWindow); */
+    RangeIterator(i, zOutputDim)
+    {
+      u32 Start = StartColumn(&Ui);
+        PushTexturedQuad(&Ui, &FNTextures[i], V2(s32(xyOutputDim)), zDepth_Text);
+      EndColumn(&Ui, Start);
+      if ( ((i+1) % 4) == 0)
+      {
+        PushNewRow(&Ui);
+      }
+    }
+    /* PushWindowEnd(&Ui, &FNWindow); */
+#endif
+    PushWindowEnd(&Ui, &BonsaiWindow);
+
     BonsaiFrameEnd(&Stdlib, &Ui);
 
-    if (Stdlib.Plat.Input.Escape.Clicked) return 0;
+    if (Stdlib.Plat.Input.Escape.Clicked) { Os->ContinueRunning = False; }
   }
 }

@@ -28,4 +28,4 @@ FastNoise Cycles/Cell Avg(11.33) Best(10.09) Worst(16.87)
 # TODO
 
 * side-by-side viewer of output
-* 
+* utility for recording performance over time
