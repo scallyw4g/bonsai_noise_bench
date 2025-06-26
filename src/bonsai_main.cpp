@@ -10,6 +10,7 @@ global_variable const u32 xyOutputDim = 512;
 global_variable const u32  zOutputDim = 16;
 global_variable u32 OutputVol = Square(xyOutputDim)*zOutputDim;
 global_variable u32 IterCount = 32ull;
+/* global_variable u32 IterCount = 1ull; */
 
 
 link_internal f32 *
@@ -124,18 +125,12 @@ int main()
   f32 ClearC =  0.4f;
   GetGL()->ClearColor(ClearC, ClearC, ClearC, 1.f);
 
-  window_layout BonsaiWindow = WindowLayout("Bonsai");
-  window_layout FNWindow = WindowLayout("FastNoise");
+  window_layout Window = WindowLayout("NoiseTextures");
   while (Os->ContinueRunning)
   {
     BonsaiFrameBegin(&Stdlib, &Ui);
 
-    if (Plat->Input.LMB.Pressed)
-    {
-      Info("dt(%.2f) (%d)", r64(Plat->dt), Plat->Input.LMB.Pressed); //Plat->Input.F1.Clicked, Plat->Input.F2.Clicked);
-    }
-
-    PushWindowStart(&Ui, &BonsaiWindow);
+    PushWindowStart(&Ui, &Window);
     RangeIterator(i, zOutputDim)
     {
       u32 Start = StartColumn(&Ui);
@@ -154,8 +149,6 @@ int main()
     PushNewRow(&Ui);
     PushNewRow(&Ui);
 
-#if 1
-    /* PushWindowStart(&Ui, &FNWindow); */
     RangeIterator(i, zOutputDim)
     {
       u32 Start = StartColumn(&Ui);
@@ -166,9 +159,7 @@ int main()
         PushNewRow(&Ui);
       }
     }
-    /* PushWindowEnd(&Ui, &FNWindow); */
-#endif
-    PushWindowEnd(&Ui, &BonsaiWindow);
+    PushWindowEnd(&Ui, &Window);
 
     BonsaiFrameEnd(&Stdlib, &Ui);
 
