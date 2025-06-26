@@ -19,13 +19,12 @@ The executable will be in the `bin` directory.
 On my laptop :
 
 ```
-$ bin/bonsai_main.exe
+$ ./bin/bonsai_main.exe
    Info    - Initializing Bonsai
-Bonsai    Cycles/Cell Avg(4.61)  Best(4.18)  Worst(7.71)
-FastNoise Cycles/Cell Avg(11.33) Best(10.09) Worst(16.87)
+Bonsai    Cycles/Cell Avg(6.77) Best(6.22) Worst(8.01)
+FastNoise Cycles/Cell Avg(10.40) Best(9.77) Worst(11.20)
 ```
 
 # TODO
 
-* side-by-side viewer of output
 * utility for recording performance over time
