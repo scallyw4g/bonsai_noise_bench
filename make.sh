@@ -14,6 +14,7 @@ RunPoof=0
 
 BuildExecutables=0
 BuildExamples=0
+BuildFastNoise=0
 
 BuildTests=0
 BuildDebugOnlyTests=0
@@ -64,38 +65,44 @@ function BuildExecutables
       $PLATFORM_LINKER_OPTIONS                       \
       $PLATFORM_DEFINES                              \
       $PLATFORM_INCLUDE_DIRS                         \
+      -I "external/FastNoise2/include" \
       -I "$ROOT"                                     \
       -I "$SRC"                                      \
       -I "$INCLUDE"                                  \
       -o "$output_basename""$PLATFORM_EXE_EXTENSION" \
-      $executable &
+      -L./external/FastNoise2/build/Release/lib \
+      -lFastNoise \
+      -nostdlib   \
+      -D_MT -D_DLL \
+      $executable
 
-    TrackPid "$executable" $!
+    # TrackPid "$executable" $!
 
   done
+}
+
+function BuildFastNoise {
+  cd external/FastNoise2
+
+  # rm -Rf build
+
+  if [ ! -d "build" ]; then
+    mkdir build
+    echo "$CC $CXX" 
+    cmake -G "Visual Studio 17 2022" -A x64 -S . -B build
+    # cmake -S . -B build
+    [ $? -ne 0 ] && echo "FastNoise2 failed to configure." && exit 1
+  fi
+
+  cmake --build build --config Release
+
+  cd -
 }
 
 
 if [ ! -d "$BIN" ]; then
   mkdir "$BIN"
 fi
-
-function RunEntireBuild {
-
-  if [ $RunPoof == 1 ]; then
-    RunPoof
-    [ $? -ne 0 ] && exit 1
-  fi
-
-  if [ $BuildExecutables == 1 ]; then
-    BuildExecutables
-  fi
-
-
-  if [ $BuildFastNoise2 == 1 ]; then
-    BuildFastNoise2
-  fi
-}
 
 
 function RunPoofHelper {
@@ -111,34 +118,6 @@ function RunPoofHelper {
    else
      echo "poof not found, skipping."
    fi
-
-
-}
-
-function BuildFastNoise2 {
-  cd external/FastNoise2
-
-  # rm -Rf build
-
-  if [ ! -d "build" ]; then
-    mkdir build
-    cmake -S . -B build
-    [ $? -ne 0 ] && echo "FastNoise2 failed to configure." && exit 1
-  fi
-
-  cmake --build build --config Release
-
-  cd -
-
-  clang++                            \
-    -D_MT -D_DLL \
-    -O2 \
-    -I ./external/FastNoise2/Include/ \
-    -L./external/FastNoise2/build/Release/lib \
-    -nostdlib \
-    -lFastNoise \
-    -o bin/fastnoise_main.cpp \
-    src/fastnoise_main.cpp
 
 
 }
@@ -169,7 +148,7 @@ BuildAll() {
   BuildExamples=1
   BuildExecutables=1
   BuildTests=1
-  BuildFastNoise2=1
+  BuildFastNoise=1
 
   for ex in $BUNDLED_EXAMPLES; do
     EXAMPLES_TO_BUILD="$EXAMPLES_TO_BUILD $ex"
@@ -179,7 +158,6 @@ BuildAll() {
 Clean() {
   rm -Rf bin
   mkdir bin
-
   rm -Rf external/FastNoise2/build
 }
 
@@ -205,8 +183,8 @@ while (( "$#" )); do
       BuildAll
     ;;
 
-    "BuildFastNoise2")
-      BuildFastNoise2=1
+    "BuildFastNoise")
+      BuildFastNoise=1
     ;;
 
     "BuildExecutables")
@@ -245,5 +223,24 @@ while (( "$#" )); do
 
   shift
 done
+
+
+function RunEntireBuild {
+
+  if [ $RunPoof == 1 ]; then
+    RunPoof
+    [ $? -ne 0 ] && exit 1
+  fi
+
+  if [ $BuildFastNoise == 1 ]; then
+    BuildFastNoise
+  fi
+
+  if [ $BuildExecutables == 1 ]; then
+    BuildExecutables
+  fi
+
+
+}
 
 time RunEntireBuild
