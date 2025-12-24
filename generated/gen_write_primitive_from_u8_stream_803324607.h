@@ -1,5 +1,8 @@
-// external/bonsai_stdlib/src/binary_parser.cpp:654:0
+// callsite
+// external/bonsai_stdlib/src/binary_parser.cpp:664:0
 
+// def (gen_write_primitive_from_u8_stream_little_endian)
+// external/bonsai_stdlib/src/binary_parser.cpp:629:0
 link_internal b32
 Write(u8_stream *Dest, s8 *Src)
 {
@@ -216,4 +219,5 @@ Write(u8_cursor_block_array *Dest, u64 Src)
   b32 Result = Write(Dest, (u8*)&Src, sizeof(u64));
   return Result;
 }
+
 

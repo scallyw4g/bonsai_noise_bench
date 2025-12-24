@@ -1,5 +1,8 @@
-// external/bonsai_stdlib/src/vector.h:232:0
+// callsite
+// external/bonsai_stdlib/src/vector.h:229:0
 
+// def (gen_vector_operators)
+// external/bonsai_stdlib/src/poof_functions.h:270:0
 link_internal void
 DeepCopy(v3i *Src, v3i *Dest)
 {
@@ -48,9 +51,22 @@ MaxChannel( v3i P1 )
   s32 Result = P1.E[0];
     Result = Cast(s32, Max(Result, P1.E[0]));
   Result = Cast(s32, Max(Result, P1.E[1]));
-  Result = Cast(s32, Max(Result, P1.E[2]));;
+  Result = Cast(s32, Max(Result, P1.E[2]));
+;
   return Result;
 }
+
+inline s32
+MinChannel( v3i P1 )
+{
+  s32 Result = P1.E[0];
+    Result = Cast(s32, Min(Result, P1.E[0]));
+  Result = Cast(s32, Min(Result, P1.E[1]));
+  Result = Cast(s32, Min(Result, P1.E[2]));
+;
+  return Result;
+}
+
 
 inline b32
 operator<( v3i P1, v3i P2 )
@@ -91,6 +107,7 @@ operator+( v3i P1, v3i P2 )
             Cast(s32, P1.E[0] + P2.E[0]),
       Cast(s32, P1.E[1] + P2.E[1]),
       Cast(s32, P1.E[2] + P2.E[2]),
+
     }};
   return Result;
 }
@@ -102,6 +119,7 @@ operator+( v3i P1, s32 Scalar )
             Cast(s32, P1.E[0] + Scalar),
       Cast(s32, P1.E[1] + Scalar),
       Cast(s32, P1.E[2] + Scalar),
+
     }};
   return Result;
 }
@@ -113,6 +131,7 @@ operator+( s32 Scalar, v3i P1 )
             Cast(s32, Scalar + P1.E[0]),
       Cast(s32, Scalar + P1.E[1]),
       Cast(s32, Scalar + P1.E[2]),
+
     }};
   return Result;
 }
@@ -126,6 +145,7 @@ operator-( v3i P1, v3i P2 )
             Cast(s32, P1.E[0] - P2.E[0]),
       Cast(s32, P1.E[1] - P2.E[1]),
       Cast(s32, P1.E[2] - P2.E[2]),
+
     }};
   return Result;
 }
@@ -137,6 +157,7 @@ operator-( v3i P1, s32 Scalar )
             Cast(s32, P1.E[0] - Scalar),
       Cast(s32, P1.E[1] - Scalar),
       Cast(s32, P1.E[2] - Scalar),
+
     }};
   return Result;
 }
@@ -148,6 +169,7 @@ operator-( s32 Scalar, v3i P1 )
             Cast(s32, Scalar - P1.E[0]),
       Cast(s32, Scalar - P1.E[1]),
       Cast(s32, Scalar - P1.E[2]),
+
     }};
   return Result;
 }
@@ -161,6 +183,7 @@ operator*( v3i P1, v3i P2 )
             Cast(s32, P1.E[0] * P2.E[0]),
       Cast(s32, P1.E[1] * P2.E[1]),
       Cast(s32, P1.E[2] * P2.E[2]),
+
     }};
   return Result;
 }
@@ -172,6 +195,7 @@ operator*( v3i P1, s32 Scalar )
             Cast(s32, P1.E[0] * Scalar),
       Cast(s32, P1.E[1] * Scalar),
       Cast(s32, P1.E[2] * Scalar),
+
     }};
   return Result;
 }
@@ -183,6 +207,7 @@ operator*( s32 Scalar, v3i P1 )
             Cast(s32, Scalar * P1.E[0]),
       Cast(s32, Scalar * P1.E[1]),
       Cast(s32, Scalar * P1.E[2]),
+
     }};
   return Result;
 }
@@ -196,6 +221,7 @@ operator/( v3i P1, v3i P2 )
             Cast(s32, P1.E[0] / P2.E[0]),
       Cast(s32, P1.E[1] / P2.E[1]),
       Cast(s32, P1.E[2] / P2.E[2]),
+
     }};
   return Result;
 }
@@ -207,6 +233,7 @@ operator/( v3i P1, s32 Scalar )
             Cast(s32, P1.E[0] / Scalar),
       Cast(s32, P1.E[1] / Scalar),
       Cast(s32, P1.E[2] / Scalar),
+
     }};
   return Result;
 }
@@ -218,6 +245,7 @@ operator/( s32 Scalar, v3i P1 )
             Cast(s32, Scalar / P1.E[0]),
       Cast(s32, Scalar / P1.E[1]),
       Cast(s32, Scalar / P1.E[2]),
+
     }};
   return Result;
 }
@@ -230,6 +258,7 @@ operator+=( v3i &P1, v3i P2 )
     P1.E[0] += P2.E[0];
   P1.E[1] += P2.E[1];
   P1.E[2] += P2.E[2];
+
   return P1;
 }
 
@@ -239,6 +268,7 @@ operator+=( v3i &P1, s32 Scalar )
     P1.E[0] += Scalar;
   P1.E[1] += Scalar;
   P1.E[2] += Scalar;
+
   return P1;
 }
 
@@ -249,6 +279,7 @@ operator-=( v3i &P1, v3i P2 )
     P1.E[0] -= P2.E[0];
   P1.E[1] -= P2.E[1];
   P1.E[2] -= P2.E[2];
+
   return P1;
 }
 
@@ -258,6 +289,7 @@ operator-=( v3i &P1, s32 Scalar )
     P1.E[0] -= Scalar;
   P1.E[1] -= Scalar;
   P1.E[2] -= Scalar;
+
   return P1;
 }
 
@@ -268,6 +300,7 @@ operator*=( v3i &P1, v3i P2 )
     P1.E[0] *= P2.E[0];
   P1.E[1] *= P2.E[1];
   P1.E[2] *= P2.E[2];
+
   return P1;
 }
 
@@ -277,6 +310,7 @@ operator*=( v3i &P1, s32 Scalar )
     P1.E[0] *= Scalar;
   P1.E[1] *= Scalar;
   P1.E[2] *= Scalar;
+
   return P1;
 }
 
@@ -287,6 +321,7 @@ operator/=( v3i &P1, v3i P2 )
     P1.E[0] /= P2.E[0];
   P1.E[1] /= P2.E[1];
   P1.E[2] /= P2.E[2];
+
   return P1;
 }
 
@@ -296,6 +331,7 @@ operator/=( v3i &P1, s32 Scalar )
     P1.E[0] /= Scalar;
   P1.E[1] /= Scalar;
   P1.E[2] /= Scalar;
+
   return P1;
 }
 

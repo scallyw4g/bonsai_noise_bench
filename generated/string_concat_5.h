@@ -1,11 +1,14 @@
-// external/bonsai_stdlib/src/counted_string.cpp:176:0
+// callsite
+// external/bonsai_stdlib/src/counted_string.cpp:187:0
 
+// def (string_concat)
+// external/bonsai_stdlib/src/counted_string.cpp:158:0
 link_internal counted_string
 Concat( cs S0, cs S1, cs S2, cs S3, cs S4,  memory_arena* Memory, umm ExtraChars = 0)
 {
-  umm TotalLength =  S0.Count +  S1.Count +  S2.Count +  S3.Count +  S4.Count +  0;
+  umm TotalLength =   S0.Count +  S1.Count +  S2.Count +  S3.Count +  S4.Count +  ExtraChars ;
   counted_string Result = {
-    .Count = TotalLength + ExtraChars,
+    .Count = TotalLength,
     .Start = AllocateProtection(char, Memory, TotalLength, False),
   };
 

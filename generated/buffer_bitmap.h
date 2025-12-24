@@ -1,5 +1,8 @@
+// callsite
 // external/bonsai_stdlib/src/bitmap.cpp:37:0
 
+// def (buffer)
+// external/bonsai_stdlib/src/poof_functions.h:1463:0
 struct bitmap_buffer
 {
   umm Count;

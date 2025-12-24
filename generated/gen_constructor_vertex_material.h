@@ -1,5 +1,8 @@
-// external/bonsai_stdlib/src/mesh.h:35:0
+// callsite
+// external/bonsai_stdlib/src/mesh.h:36:0
 
+// def (gen_constructor)
+// external/bonsai_stdlib/src/poof_functions.h:115:0
 link_internal vertex_material
 VertexMaterial(  u16   ColorIndex , u8   Transparency , u8   Emission  )
 {
@@ -7,11 +10,16 @@ VertexMaterial(  u16   ColorIndex , u8   Transparency , u8   Emission  )
             .ColorIndex = ColorIndex
 
 ,        .Transparency = Transparency
-,
-        .Emission = Emission
+
+,        .Emission = Emission
+
+
   };
 
+    
   
+  
+
   return Reuslt;
 }
 

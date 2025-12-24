@@ -1,4 +1,8 @@
+// callsite
 // external/bonsai_stdlib/src/vector.cpp:5:0
+
+// def (generate_cursor)
+// external/bonsai_stdlib/src/poof_functions.h:1569:0
 
 struct v3i_cursor
 {
@@ -6,8 +10,8 @@ struct v3i_cursor
   // TODO(Jesse)(immediate): For the love of fucksakes change these to indices
   v3i *At;
   v3i *End;
-  /* OWNED_BY_THREAD_MEMBER(); */
 };
+
 
 
 
@@ -16,14 +20,16 @@ V3iCursor(umm ElementCount, memory_arena* Memory)
 {
   v3i *Start = (v3i*)PushStruct(Memory, sizeof(v3i)*ElementCount, 1, 0);
   v3i_cursor Result = {};
+
   Result.Start = Start;
   Result.End = Start+ElementCount;
   Result.At = Start;
+
   return Result;
 }
 
 link_internal v3i*
-GetPtr(v3i_cursor *Cursor, umm ElementIndex)
+GetPtr( v3i_cursor *Cursor, umm ElementIndex)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -33,13 +39,13 @@ GetPtr(v3i_cursor *Cursor, umm ElementIndex)
 }
 
 link_internal v3i*
-TryGetPtr(v3i_cursor *Cursor, umm ElementIndex)
+TryGetPtr( v3i_cursor *Cursor, umm ElementIndex)
 {
   return GetPtr(Cursor, ElementIndex);
 }
 
 link_internal v3i*
-GetPtrUnsafe(v3i_cursor *Cursor, umm ElementIndex)
+GetPtrUnsafe( v3i_cursor *Cursor, umm ElementIndex)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -49,7 +55,7 @@ GetPtrUnsafe(v3i_cursor *Cursor, umm ElementIndex)
 }
 
 link_internal v3i
-Get(v3i_cursor *Cursor, umm ElementIndex)
+Get( v3i_cursor *Cursor, umm ElementIndex)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -59,7 +65,7 @@ Get(v3i_cursor *Cursor, umm ElementIndex)
 }
 
 link_internal void
-Set(v3i_cursor *Cursor, umm ElementIndex, v3i Element)
+Set( v3i_cursor *Cursor, umm ElementIndex, v3i Element)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -74,7 +80,7 @@ Set(v3i_cursor *Cursor, umm ElementIndex, v3i Element)
 }
 
 link_internal v3i*
-Advance(v3i_cursor *Cursor)
+Advance( v3i_cursor *Cursor)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -84,7 +90,7 @@ Advance(v3i_cursor *Cursor)
 }
 
 link_internal v3i *
-Push(v3i_cursor *Cursor, v3i Element)
+Push( v3i_cursor *Cursor, v3i Element)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -95,7 +101,7 @@ Push(v3i_cursor *Cursor, v3i Element)
 }
 
 link_internal v3i
-Pop(v3i_cursor *Cursor)
+Pop( v3i_cursor *Cursor)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -106,7 +112,7 @@ Pop(v3i_cursor *Cursor)
 }
 
 link_internal s32
-LastIndex(v3i_cursor *Cursor)
+LastIndex( v3i_cursor *Cursor)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -115,7 +121,7 @@ LastIndex(v3i_cursor *Cursor)
 }
 
 link_internal v3i*
-LastElement(v3i_cursor *Cursor)
+LastElement( v3i_cursor *Cursor)
 {
   v3i *Result = {};
   s32 I = LastIndex(Cursor);
@@ -124,7 +130,7 @@ LastElement(v3i_cursor *Cursor)
 }
 
 link_internal b32
-Remove(v3i_cursor *Cursor, v3i Query)
+Remove( v3i_cursor *Cursor, v3i Query)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -147,7 +153,7 @@ Remove(v3i_cursor *Cursor, v3i Query)
 
 
 link_internal b32
-ResizeCursor(v3i_cursor *Cursor, umm Count, memory_arena *Memory)
+ResizeCursor( v3i_cursor *Cursor, umm Count, memory_arena *Memory)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 

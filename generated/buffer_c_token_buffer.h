@@ -1,5 +1,8 @@
+// callsite
 // external/bonsai_stdlib/src/c_token.cpp:5:0
 
+// def (buffer)
+// external/bonsai_stdlib/src/poof_functions.h:1463:0
 struct c_token_buffer_buffer
 {
   umm Count;

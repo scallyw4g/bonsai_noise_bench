@@ -13,6 +13,9 @@ global_variable const u32 IterCount = 8ull;
 /* global_variable u32 IterCount = 1ull; */
 
 
+f32 BonsaiBest = 0.f;
+f32 FNBest = 0.f;
+
 link_internal f32 *
 DoBonsaiBenchmark(memory_arena *Memory)
 {
@@ -49,6 +52,8 @@ DoBonsaiBenchmark(memory_arena *Memory)
       r64(BestCyclesPerCell),
       r64(WorstCyclesPerCell));
 
+
+  BonsaiBest = BestCyclesPerCell;
 
 #if 1
   f32 *Result = AllocateAligned(f32, Memory, OutputVol, 32);
@@ -89,6 +94,8 @@ DoFastNoiseBenchmark()
   auto BestCyclesPerCell = float(Best)/float(OutputVol);
   auto WorstCyclesPerCell = float(Worst)/float(OutputVol);
 
+  FNBest = BestCyclesPerCell;
+
   printf("FastNoise Cycles/Cell Avg(%.2f) Best(%.2f) Worst(%.2f)\n",
       r64(AvgCyclesPerCell),
       r64(BestCyclesPerCell),
@@ -107,6 +114,8 @@ int main()
 
   auto BonsaiData = DoBonsaiBenchmark(&Memory);
   auto FNData     = DoFastNoiseBenchmark();
+
+  printf("\nFastnoise/Bonsai ratio (%.2f)\n\n", FNBest/BonsaiBest);
 
 #if 0
   OpenAndInitializeWindow();

@@ -1,5 +1,8 @@
-// external/bonsai_stdlib/src/bitmap.cpp:182:0
+// callsite
+// external/bonsai_stdlib/src/bitmap.cpp:199:0
 
+// def (block_array)
+// external/bonsai_stdlib/src/poof_functions.h:2724:0
 
 
 
@@ -11,12 +14,18 @@ struct bitmap_block
   bitmap Elements[8];
 };
 
+
 struct bitmap_block_array_index
 {
   umm Index; 
 };
 
 struct bitmap_block_array
+poof(
+  @collection
+  
+  
+)
 {
   bitmap_block **BlockPtrs; poof(@array_length(Element->BlockCount))
   u32   BlockCount;
@@ -182,6 +191,21 @@ TryGetPtr( bitmap_block_array *Arr, umm Index)
   return Result;
 }
 
+/* link_internal void */
+/* Swap( (element_t.name)_block_array *Arr, umm I0, umm I1) */
+/* { */
+/*   Assert(I0 < AtElements(Arr).Index); */
+/*   Assert(I1 < AtElements(Arr).Index); */
+
+/*   auto P0 = GetPtr(Arr, I0); */
+/*   auto P1 = GetPtr(Arr, I1); */
+
+/*   auto Tmp = *P0; */
+/*   *P0 = *P1; */
+
+/*   *P1 = Tmp; */
+/* } */
+
 
 
 
@@ -323,25 +347,55 @@ Push( bitmap_block_array *Array )
 }
 
 link_internal void
-Shift( bitmap_block_array *Array, bitmap *Element )
+Insert( bitmap_block_array *Array, bitmap_block_array_index Index, bitmap *Element )
 {
+  Assert(Index.Index <= LastIndex(Array).Index);
   Assert(Array->Memory);
-  bitmap *Prev = {};
 
   // Alocate a new thingy
-  Push(Array);
+  bitmap *Prev = Push(Array);
 
-  auto End = AtElements(Array);
-  RangeIteratorReverse(Index, s32(End.Index))
+  auto Last = LastIndex(Array);
+
+  RangeIteratorReverseRange(I, s32(Last.Index), s32(Index.Index))
   {
-    auto E = GetPtr(Array, umm(Index));
-    if (Prev) { *Prev = *E; }
+    auto E = GetPtr(Array, umm(I));
+    *Prev = *E;
     Prev = E;
   }
 
   *Prev = *Element;
 }
 
+link_internal void
+Insert( bitmap_block_array *Array, u32 Index, bitmap *Element )
+{
+  Insert(Array, { .Index = Index }, Element);
+}
+
+link_internal void
+Shift( bitmap_block_array *Array, bitmap *Element )
+{
+  Insert(Array, { .Index = 0 }, Element);
+}
+
+/* element_t.has_tag(do_editor_ui)? */
+/* { */
+/*   do_editor_ui_for_container( block_array_t ) */
+/* } */
+
+
+link_internal bitmap *
+Pop( bitmap_block_array *Array )
+{
+  if (auto Result = TryGetPtr(Array, LastIndex(Array)))
+  {
+    Assert(Array->ElementCount > 0);
+    Array->ElementCount -= 1;
+    return Result;
+  }
+  return 0;
+}
 
 
 

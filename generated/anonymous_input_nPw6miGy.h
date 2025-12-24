@@ -1,5 +1,8 @@
+// callsite
 // external/bonsai_stdlib/src/platform/win32/win32_platform.cpp:440:0
 
+// def (anonymous)
+// external/bonsai_stdlib/src/platform/win32/win32_platform.cpp:440:0
 BindKeydownToInput( VK_RETURN, Enter);
 
 BindKeydownToInput( VK_ESCAPE, Escape);
@@ -117,6 +120,10 @@ BindKeydownToInput( 0x58, X);
 BindKeydownToInput( 0x59, Y);
 
 BindKeydownToInput( 0x5A, Z);
+
+
+
+
 
 
 

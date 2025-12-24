@@ -1,5 +1,8 @@
-// external/bonsai_stdlib/src/file.cpp:3:0
+// callsite
+// external/bonsai_stdlib/src/file.cpp:5:0
 
+// def (buffer)
+// external/bonsai_stdlib/src/poof_functions.h:1463:0
 struct file_traversal_node_buffer
 {
   umm Count;

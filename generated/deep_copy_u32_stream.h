@@ -1,5 +1,8 @@
+// callsite
 // external/bonsai_stdlib/src/binary_parser.cpp:15:0
 
+// def (deep_copy)
+// external/bonsai_stdlib/src/poof_functions.h:1327:0
 /* link_internal void */
 /* DeepCopy( Type.name *Src, Type.name *Dest) */
 /* { */

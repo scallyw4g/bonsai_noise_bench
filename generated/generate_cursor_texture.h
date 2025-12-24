@@ -1,4 +1,8 @@
+// callsite
 // external/bonsai_stdlib/src/texture_cursor.cpp:10:0
+
+// def (generate_cursor)
+// external/bonsai_stdlib/src/poof_functions.h:1569:0
 
 struct texture_cursor
 {
@@ -6,8 +10,8 @@ struct texture_cursor
   // TODO(Jesse)(immediate): For the love of fucksakes change these to indices
   texture *At;
   texture *End;
-  /* OWNED_BY_THREAD_MEMBER(); */
 };
+
 
 
 
@@ -16,14 +20,16 @@ TextureCursor(umm ElementCount, memory_arena* Memory)
 {
   texture *Start = (texture*)PushStruct(Memory, sizeof(texture)*ElementCount, 1, 0);
   texture_cursor Result = {};
+
   Result.Start = Start;
   Result.End = Start+ElementCount;
   Result.At = Start;
+
   return Result;
 }
 
 link_internal texture*
-GetPtr(texture_cursor *Cursor, umm ElementIndex)
+GetPtr( texture_cursor *Cursor, umm ElementIndex)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -33,13 +39,13 @@ GetPtr(texture_cursor *Cursor, umm ElementIndex)
 }
 
 link_internal texture*
-TryGetPtr(texture_cursor *Cursor, umm ElementIndex)
+TryGetPtr( texture_cursor *Cursor, umm ElementIndex)
 {
   return GetPtr(Cursor, ElementIndex);
 }
 
 link_internal texture*
-GetPtrUnsafe(texture_cursor *Cursor, umm ElementIndex)
+GetPtrUnsafe( texture_cursor *Cursor, umm ElementIndex)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -49,7 +55,7 @@ GetPtrUnsafe(texture_cursor *Cursor, umm ElementIndex)
 }
 
 link_internal texture
-Get(texture_cursor *Cursor, umm ElementIndex)
+Get( texture_cursor *Cursor, umm ElementIndex)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -59,7 +65,7 @@ Get(texture_cursor *Cursor, umm ElementIndex)
 }
 
 link_internal void
-Set(texture_cursor *Cursor, umm ElementIndex, texture Element)
+Set( texture_cursor *Cursor, umm ElementIndex, texture Element)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -74,7 +80,7 @@ Set(texture_cursor *Cursor, umm ElementIndex, texture Element)
 }
 
 link_internal texture*
-Advance(texture_cursor *Cursor)
+Advance( texture_cursor *Cursor)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -84,7 +90,7 @@ Advance(texture_cursor *Cursor)
 }
 
 link_internal texture *
-Push(texture_cursor *Cursor, texture Element)
+Push( texture_cursor *Cursor, texture Element)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -95,7 +101,7 @@ Push(texture_cursor *Cursor, texture Element)
 }
 
 link_internal texture
-Pop(texture_cursor *Cursor)
+Pop( texture_cursor *Cursor)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -106,7 +112,7 @@ Pop(texture_cursor *Cursor)
 }
 
 link_internal s32
-LastIndex(texture_cursor *Cursor)
+LastIndex( texture_cursor *Cursor)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -115,7 +121,7 @@ LastIndex(texture_cursor *Cursor)
 }
 
 link_internal texture*
-LastElement(texture_cursor *Cursor)
+LastElement( texture_cursor *Cursor)
 {
   texture *Result = {};
   s32 I = LastIndex(Cursor);
@@ -124,7 +130,7 @@ LastElement(texture_cursor *Cursor)
 }
 
 link_internal b32
-Remove(texture_cursor *Cursor, texture Query)
+Remove( texture_cursor *Cursor, texture Query)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -147,7 +153,7 @@ Remove(texture_cursor *Cursor, texture Query)
 
 
 link_internal b32
-ResizeCursor(texture_cursor *Cursor, umm Count, memory_arena *Memory)
+ResizeCursor( texture_cursor *Cursor, umm Count, memory_arena *Memory)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 

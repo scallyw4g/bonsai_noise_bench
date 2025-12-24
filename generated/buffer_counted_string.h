@@ -1,5 +1,8 @@
-// external/bonsai_stdlib/src/counted_string.cpp:18:0
+// callsite
+// external/bonsai_stdlib/src/counted_string.cpp:29:0
 
+// def (buffer)
+// external/bonsai_stdlib/src/poof_functions.h:1463:0
 struct counted_string_buffer
 {
   umm Count;

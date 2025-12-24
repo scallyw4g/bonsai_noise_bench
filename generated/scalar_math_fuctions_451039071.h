@@ -1,5 +1,8 @@
-// external/bonsai_stdlib/src/maff.h:386:0
+// callsite
+// external/bonsai_stdlib/src/maff.h:413:0
 
+// def (scalar_math_fuctions)
+// external/bonsai_stdlib/src/maff.h:398:0
 inline r32
 Clamp( r32 Min, r32 Value, r32 Max )
 {
@@ -42,4 +45,5 @@ Clamp( s64 Min, s64 Value, s64 Max )
   if (Value < Min) { Value = Min; }
   return Value;
 }
+
 

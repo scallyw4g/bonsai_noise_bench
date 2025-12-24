@@ -1,5 +1,8 @@
+// callsite
 // external/bonsai_stdlib/src/primitive_containers.cpp:2:0
 
+// def (block_array_c)
+// external/bonsai_stdlib/src/poof_functions.h:2502:0
 
 
 
@@ -141,24 +144,54 @@ Push( u32_block_array *Array )
 }
 
 link_internal void
-Shift( u32_block_array *Array, u32 *Element )
+Insert( u32_block_array *Array, u32_block_array_index Index, u32 *Element )
 {
+  Assert(Index.Index <= LastIndex(Array).Index);
   Assert(Array->Memory);
-  u32 *Prev = {};
 
   // Alocate a new thingy
-  Push(Array);
+  u32 *Prev = Push(Array);
 
-  auto End = AtElements(Array);
-  RangeIteratorReverse(Index, s32(End.Index))
+  auto Last = LastIndex(Array);
+
+  RangeIteratorReverseRange(I, s32(Last.Index), s32(Index.Index))
   {
-    auto E = GetPtr(Array, umm(Index));
-    if (Prev) { *Prev = *E; }
+    auto E = GetPtr(Array, umm(I));
+    *Prev = *E;
     Prev = E;
   }
 
   *Prev = *Element;
 }
 
+link_internal void
+Insert( u32_block_array *Array, u32 Index, u32 *Element )
+{
+  Insert(Array, { .Index = Index }, Element);
+}
+
+link_internal void
+Shift( u32_block_array *Array, u32 *Element )
+{
+  Insert(Array, { .Index = 0 }, Element);
+}
+
+/* element_t.has_tag(do_editor_ui)? */
+/* { */
+/*   do_editor_ui_for_container( block_array_t ) */
+/* } */
+
+
+link_internal u32 *
+Pop( u32_block_array *Array )
+{
+  if (auto Result = TryGetPtr(Array, LastIndex(Array)))
+  {
+    Assert(Array->ElementCount > 0);
+    Array->ElementCount -= 1;
+    return Result;
+  }
+  return 0;
+}
 
 

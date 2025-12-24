@@ -1,5 +1,8 @@
+// callsite
 // external/bonsai_stdlib/src/sort.cpp:1:0
 
+// def (buffer)
+// external/bonsai_stdlib/src/poof_functions.h:1463:0
 struct sort_key_buffer
 {
   umm Count;

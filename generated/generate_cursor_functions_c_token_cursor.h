@@ -1,4 +1,8 @@
+// callsite
 // external/bonsai_stdlib/src/c_token.h:390:0
+
+// def (generate_cursor_functions)
+// external/bonsai_stdlib/src/poof_functions.h:1591:0
 
 
 link_internal c_token_cursor
@@ -6,14 +10,16 @@ CTokenCursor(umm ElementCount, memory_arena* Memory)
 {
   c_token *Start = (c_token*)PushStruct(Memory, sizeof(c_token)*ElementCount, 1, 0);
   c_token_cursor Result = {};
+
   Result.Start = Start;
   Result.End = Start+ElementCount;
   Result.At = Start;
+
   return Result;
 }
 
 link_internal c_token*
-GetPtr(c_token_cursor *Cursor, umm ElementIndex)
+GetPtr( c_token_cursor *Cursor, umm ElementIndex)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -23,13 +29,13 @@ GetPtr(c_token_cursor *Cursor, umm ElementIndex)
 }
 
 link_internal c_token*
-TryGetPtr(c_token_cursor *Cursor, umm ElementIndex)
+TryGetPtr( c_token_cursor *Cursor, umm ElementIndex)
 {
   return GetPtr(Cursor, ElementIndex);
 }
 
 link_internal c_token*
-GetPtrUnsafe(c_token_cursor *Cursor, umm ElementIndex)
+GetPtrUnsafe( c_token_cursor *Cursor, umm ElementIndex)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -39,7 +45,7 @@ GetPtrUnsafe(c_token_cursor *Cursor, umm ElementIndex)
 }
 
 link_internal c_token
-Get(c_token_cursor *Cursor, umm ElementIndex)
+Get( c_token_cursor *Cursor, umm ElementIndex)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -49,7 +55,7 @@ Get(c_token_cursor *Cursor, umm ElementIndex)
 }
 
 link_internal void
-Set(c_token_cursor *Cursor, umm ElementIndex, c_token Element)
+Set( c_token_cursor *Cursor, umm ElementIndex, c_token Element)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -64,7 +70,7 @@ Set(c_token_cursor *Cursor, umm ElementIndex, c_token Element)
 }
 
 link_internal c_token*
-Advance(c_token_cursor *Cursor)
+Advance( c_token_cursor *Cursor)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -74,7 +80,7 @@ Advance(c_token_cursor *Cursor)
 }
 
 link_internal c_token *
-Push(c_token_cursor *Cursor, c_token Element)
+Push( c_token_cursor *Cursor, c_token Element)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -85,7 +91,7 @@ Push(c_token_cursor *Cursor, c_token Element)
 }
 
 link_internal c_token
-Pop(c_token_cursor *Cursor)
+Pop( c_token_cursor *Cursor)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -96,7 +102,7 @@ Pop(c_token_cursor *Cursor)
 }
 
 link_internal s32
-LastIndex(c_token_cursor *Cursor)
+LastIndex( c_token_cursor *Cursor)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -105,7 +111,7 @@ LastIndex(c_token_cursor *Cursor)
 }
 
 link_internal c_token*
-LastElement(c_token_cursor *Cursor)
+LastElement( c_token_cursor *Cursor)
 {
   c_token *Result = {};
   s32 I = LastIndex(Cursor);
@@ -114,7 +120,7 @@ LastElement(c_token_cursor *Cursor)
 }
 
 link_internal b32
-Remove(c_token_cursor *Cursor, c_token Query)
+Remove( c_token_cursor *Cursor, c_token Query)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 
@@ -137,7 +143,7 @@ Remove(c_token_cursor *Cursor, c_token Query)
 
 
 link_internal b32
-ResizeCursor(c_token_cursor *Cursor, umm Count, memory_arena *Memory)
+ResizeCursor( c_token_cursor *Cursor, umm Count, memory_arena *Memory)
 {
   /* ENSURE_OWNED_BY_THREAD(Cursor); */
 

@@ -1,5 +1,8 @@
+// callsite
 // external/bonsai_stdlib/src/ansi_stream.cpp:3:0
 
+// def (block_array_c)
+// external/bonsai_stdlib/src/poof_functions.h:2502:0
 
 
 
@@ -141,24 +144,54 @@ Push( u8_cursor_block_array *Array )
 }
 
 link_internal void
-Shift( u8_cursor_block_array *Array, u8_cursor *Element )
+Insert( u8_cursor_block_array *Array, u8_cursor_block_array_index Index, u8_cursor *Element )
 {
+  Assert(Index.Index <= LastIndex(Array).Index);
   Assert(Array->Memory);
-  u8_cursor *Prev = {};
 
   // Alocate a new thingy
-  Push(Array);
+  u8_cursor *Prev = Push(Array);
 
-  auto End = AtElements(Array);
-  RangeIteratorReverse(Index, s32(End.Index))
+  auto Last = LastIndex(Array);
+
+  RangeIteratorReverseRange(I, s32(Last.Index), s32(Index.Index))
   {
-    auto E = GetPtr(Array, umm(Index));
-    if (Prev) { *Prev = *E; }
+    auto E = GetPtr(Array, umm(I));
+    *Prev = *E;
     Prev = E;
   }
 
   *Prev = *Element;
 }
 
+link_internal void
+Insert( u8_cursor_block_array *Array, u32 Index, u8_cursor *Element )
+{
+  Insert(Array, { .Index = Index }, Element);
+}
+
+link_internal void
+Shift( u8_cursor_block_array *Array, u8_cursor *Element )
+{
+  Insert(Array, { .Index = 0 }, Element);
+}
+
+/* element_t.has_tag(do_editor_ui)? */
+/* { */
+/*   do_editor_ui_for_container( block_array_t ) */
+/* } */
+
+
+link_internal u8_cursor *
+Pop( u8_cursor_block_array *Array )
+{
+  if (auto Result = TryGetPtr(Array, LastIndex(Array)))
+  {
+    Assert(Array->ElementCount > 0);
+    Array->ElementCount -= 1;
+    return Result;
+  }
+  return 0;
+}
 
 

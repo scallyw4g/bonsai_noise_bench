@@ -1,5 +1,8 @@
+// callsite
 // external/bonsai_stdlib/src/c_token.cpp:8:0
 
+// def (generate_stream)
+// external/bonsai_stdlib/src/poof_functions.h:2119:0
 struct c_token_buffer_stream_chunk
 {
   c_token_buffer Element;

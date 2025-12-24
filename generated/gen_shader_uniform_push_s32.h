@@ -1,8 +1,13 @@
-// external/bonsai_stdlib/src/shader.cpp:336:0
+// callsite
+// external/bonsai_stdlib/src/shader.cpp:383:0
+
+// def (set_shader_uniform)
+// external/bonsai_stdlib/src/poof_functions.h:14:0
 
 b32
-SetShaderUniform(shader *Shader, u32 Index, s32 *Value, const char *Name)
+InitShaderUniform(shader *Shader, u32 Index, s32 *Value, const char *Name, u32 *Count)
 {
+  /* Assert(Count); */
   Assert(Index < Shader->Uniforms.Count);
 
   shader_uniform *Uniform = Shader->Uniforms.Start + Index;
@@ -10,9 +15,18 @@ SetShaderUniform(shader *Shader, u32 Index, s32 *Value, const char *Name)
   Uniform->Type = ShaderUniform_S32;
   Uniform->S32 = Value;
   Uniform->Name = Name;
+  Uniform->Count = Count;
 
   Uniform->ID = GetShaderUniform(Shader, Name);
 
   return Uniform->ID != INVALID_SHADER_UNIFORM;
+}
+
+b32
+InitShaderUniform(shader *Shader, u32 Index, s32 *Value, const char *Name)
+{
+  // Setting this to null implies a count of 1
+  u32 *CountPtr = 0;
+  return InitShaderUniform(Shader, Index, Value, Name, CountPtr);
 }
 

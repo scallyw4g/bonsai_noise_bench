@@ -1,5 +1,8 @@
-// external/bonsai_stdlib/src/counted_string.cpp:46:0
+// callsite
+// external/bonsai_stdlib/src/counted_string.cpp:57:0
 
+// def (buffer_builder)
+// external/bonsai_stdlib/src/poof_functions.h:727:0
 struct tuple_cs_cs_buffer_builder
 {
   tuple_cs_cs_stream Chunks;

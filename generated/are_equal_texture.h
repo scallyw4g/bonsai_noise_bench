@@ -1,5 +1,8 @@
+// callsite
 // external/bonsai_stdlib/src/texture_cursor.cpp:1:0
 
+// def (are_equal)
+// external/bonsai_stdlib/src/poof_functions.h:638:0
 link_internal b32
 AreEqual(texture *Thing1, texture *Thing2)
 {
@@ -21,6 +24,8 @@ AreEqual(texture *Thing1, texture *Thing2)
         Result &= AreEqual(Thing1->DebugName, Thing2->DebugName);
 
         Result &= AreEqual(Thing1->Queued, Thing2->Queued);
+
+
 
     return Result;
   }
@@ -49,6 +54,8 @@ AreEqual(texture Thing1, texture Thing2)
     Result &= AreEqual(Thing1.DebugName, Thing2.DebugName);
 
     Result &= AreEqual(Thing1.Queued, Thing2.Queued);
+
+
 
   return Result;
 }

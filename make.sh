@@ -10,7 +10,7 @@
 
 BUILD_EVERYTHING=0
 
-RunPoof=0
+RunPoof=1
 
 BuildExecutables=0
 BuildExamples=0
@@ -26,7 +26,7 @@ source $stdlib_build_scripts/preamble.sh
 source $stdlib_build_scripts/setup_for_cxx.sh
 
 
-OPTIMIZATION_LEVEL="-O2"
+# OPTIMIZATION_LEVEL="-O0"
 EMCC=0
 
 
@@ -163,7 +163,6 @@ Clean() {
 
 
 if [ $# -eq 0 ]; then
-  OPTIMIZATION_LEVEL="-O2"
   BuildAll
 fi
 

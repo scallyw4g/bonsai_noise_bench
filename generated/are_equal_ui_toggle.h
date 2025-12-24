@@ -1,5 +1,8 @@
-// external/bonsai_stdlib/src/ui/ui.h:157:0
+// callsite
+// external/bonsai_stdlib/src/ui/ui.h:163:0
 
+// def (are_equal)
+// external/bonsai_stdlib/src/poof_functions.h:638:0
 link_internal b32
 AreEqual(ui_toggle *Thing1, ui_toggle *Thing2)
 {
