@@ -26,7 +26,7 @@ source $stdlib_build_scripts/preamble.sh
 source $stdlib_build_scripts/setup_for_cxx.sh
 
 
-OPTIMIZATION_LEVEL=""
+OPTIMIZATION_LEVEL="-O2"
 EMCC=0
 
 

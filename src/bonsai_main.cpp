@@ -9,7 +9,7 @@
 global_variable const u32 xyOutputDim = 512;
 global_variable const u32  zOutputDim = 16;
 global_variable u32 OutputVol = Square(xyOutputDim)*zOutputDim;
-global_variable const u32 IterCount = 32ull;
+global_variable const u32 IterCount = 8ull;
 /* global_variable u32 IterCount = 1ull; */
 
 
@@ -108,6 +108,7 @@ int main()
   auto BonsaiData = DoBonsaiBenchmark(&Memory);
   auto FNData     = DoFastNoiseBenchmark();
 
+#if 0
   OpenAndInitializeWindow();
   PlatformMakeRenderContextCurrent(Os);
   Ensure( InitializeOpenglFunctions() );
@@ -172,4 +173,5 @@ int main()
 
     if (Stdlib.Plat.Input.Escape.Clicked) { Os->ContinueRunning = False; }
   }
+#endif
 }
