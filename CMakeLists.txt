@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 4.2.1)
 set(CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_C_COMPILER "clang")
+set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
+
 project(BonsaiNoiseBench)
 add_executable(BonsaiNoiseBench "src/bonsai_main.cpp")
 
