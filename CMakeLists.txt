@@ -4,6 +4,23 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_COMPILER "clang")
 set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
 
+# Vector extensions
+add_compile_options(-mssse3 -mavx -mavx2 -mfma -mvaes)
+
+
+add_compile_options(-ferror-limit=2000)
+add_compile_options(-Weverything)
+# Don't use these warnings
+add_compile_options(-Wno-reserved-identifier -Wno-reserved-id-macro -Wno-unknown-warning-option -Wno-unsafe-buffer-usage
+        -Wno-exit-time-destructors -Wno-c++98-compat-pedantic -Wno-gnu-anonymous-struct -Wno-nested-anon-types
+        -Wno-missing-prototypes -Wno-zero-as-null-pointer-constant -Wno-format-nonliteral -Wno-cast-qual
+        -Wno-unused-function -Wno-four-char-constants -Wno-old-style-cast -Wno-float-equal -Wno-global-constructors
+        -Wno-cast-align -Wno-switch-enum -Wno-switch-default -Wno-covered-switch-default -Wno-undef -Wno-c99-extensions
+        -Wno-dollar-in-identifier-extension -Wno-class-varargs -Wno-unused-value -Wno-unused-variable
+        -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-implicit-int-float-conversion -Wno-extra-semi-stmt
+        -Wno-reorder-init-list -Wno-unused-macros -Wno-padded -Wno-gnu-zero-variadic-macro-arguments
+        -Wno-atomic-implicit-seq-cst -Wno-nonportable-system-include-path -Wno-nonportable-include-path)
+
 project(BonsaiNoiseBench)
 add_executable(BonsaiNoiseBench "src/bonsai_main.cpp")
 
@@ -21,5 +38,3 @@ if (LINUX)
 endif (LINUX)
 
 add_compile_definitions(BONSAI_INTERNAL)
-
-set(CMAKE_CXX_FLAGS "-ferror-limit=2000 -mssse3 -mavx -mavx2 -mfma -mvaes -Weverything -Wno-reserved-identifier -Wno-reserved-id-macro -Wno-unknown-warning-option -Wno-unsafe-buffer-usage -Wno-exit-time-destructors -Wno-c++98-compat-pedantic -Wno-gnu-anonymous-struct -Wno-nested-anon-types -Wno-missing-prototypes -Wno-zero-as-null-pointer-constant -Wno-format-nonliteral -Wno-cast-qual -Wno-unused-function -Wno-four-char-constants -Wno-old-style-cast -Wno-float-equal -Wno-global-constructors -Wno-cast-align -Wno-switch-enum -Wno-switch-default -Wno-covered-switch-default -Wno-undef -Wno-c99-extensions -Wno-dollar-in-identifier-extension -Wno-class-varargs -Wno-unused-value -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-implicit-int-float-conversion -Wno-extra-semi-stmt -Wno-reorder-init-list -Wno-unused-macros -Wno-padded -Wno-gnu-zero-variadic-macro-arguments -Wno-atomic-implicit-seq-cst -Wno-nonportable-system-include-path -Wno-nonportable-include-path")
